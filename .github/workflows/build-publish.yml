@@ -1,0 +1,52 @@
+name: "JFrog-GitHub NPM Publish OIDC Integration"
+on: push
+
+# This is required as per
+# https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers#adding-permissions-settings
+permissions:
+  id-token: write
+
+jobs:
+  build:
+     runs-on: ubuntu-latest
+     env:
+      OIDC_AUDIENCE: 'jfrog-github'
+      PLATFORM_REPO: 'eks-npm'
+     defaults:
+      run:
+        working-directory: ./package
+     steps:
+       - name: Checkout
+         uses: actions/checkout@v3
+              
+       - name: Setup Node npm
+         uses: actions/setup-node@v3
+   
+       - name: Setup JFrog CLI
+         uses: jfrog/setup-jfrog-cli@v3
+         env:  
+           JF_URL: ${{ secrets.JF_URL }}
+         with:
+           oidc-provider-name: github
+           oidc-audience: jfrog-github
+
+       - name: Set CLI Config
+         run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
+           
+       - name: Install Dependencies
+         run: jf npm install
+           
+       - name: Run tests
+         run: npm test
+         
+       - name: Publish
+         run: jf npm publish
+         
+       - name: Publish Build info With JFrog CLI
+         run: |
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # Publish build info
+          jf rt build-publish
