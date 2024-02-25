@@ -28,8 +28,8 @@ jobs:
          env:  
            JF_URL: ${{ secrets.JF_URL }}
          with:
-           oidc-provider-name: $OIDC_PROVIDER
-           oidc-audience: $OIDC_AUDIENCE
+           oidc-provider-name: ${{ env.OIDC_PROVIDER }}
+           oidc-audience: ${{ env.OIDC_AUDIENCE }}
 
        - name: Set CLI Config
          run: jf npm-config --global=true --repo-resolve=$PLATFORM_REPO --repo-deploy=$PLATFORM_REPO
