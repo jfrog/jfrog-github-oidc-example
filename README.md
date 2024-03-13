@@ -64,7 +64,7 @@ These secrets are used to authenticate and interact with JFrog Artifactory secur
 ## References
 
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [JFrog Artifactory Documentation](https://www.jfrog.com/confluence/)
+- [JFrog Artifactory OIDC Documentation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/github-actions-oidc-integration-workflow)
 - [OpenID Connect (OIDC) Documentation](https://openid.net/connect/)
 
 ## Contributing
